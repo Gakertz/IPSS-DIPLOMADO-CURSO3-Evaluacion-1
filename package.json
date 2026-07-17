@@ -1,0 +1,11 @@
+{
+  "name": "ipss-diplomado-curso3-evaluacion-1",
+  "version": "1.0.0",
+  "description": "Evaluación 1 · API del Mundial 2026 — Diplomado IPS · Módulo 3 (Backend y APIs REST).",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node --watch server.js",
+    "start": "node server.js"
+  }
+}

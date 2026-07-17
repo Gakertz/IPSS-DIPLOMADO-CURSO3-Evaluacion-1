@@ -1,0 +1,8 @@
+node_modules
+
+# Nunca subas tus variables de entorno al repositorio.
+.env
+.env.local
+
+dist/
+.DS_Store

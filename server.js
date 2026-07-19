@@ -36,10 +36,6 @@
 // una (qué recibe, qué devuelve, qué status) está en el enunciado: léelo.
 //
 //   ── Con lógica ⭐ ──────────────────────────────────────────────────────────
-//   GET  /api/selecciones?continente=Europa   filtra por continente  (anidada)
-//   GET  /api/selecciones?campeon=true        solo las que ganaron alguna copa
-//   GET  /api/copas                           todas las copas, en una lista plana
-//   GET  /api/copas/:seleccion                las copas de una (por NOMBRE), o 404
 //   GET  /api/estadisticas                    resumen del torneo         (vale 2%)
 //
 //   ── Semifinales y final ⭐ ─────────────────────────────────────────────────
@@ -129,6 +125,47 @@
             })
         }
         res.status(200).json(seleccionEncontrada.copas)
+    })
+    app.post('/api/worldcup/2026/semifinals/:n', (req, res) => {
+        const numeroSemifinal = Number(req.params.n)
+        const { local, visita } = req.body
+        const idLocal = Number(local.seleccionId)
+        const idVisita = Number(visita.seleccionId)
+        const seleccionLocal = selecciones.find(
+            (seleccion) => seleccion.id === idLocal,
+        )
+        const seleccionVisita = selecciones.find(
+            (seleccion) => seleccion.id === idVisita,
+        )
+        if (!seleccionLocal || !seleccionVisita) {
+            return res.status(404).json({
+            error: 'Alguna de las seleccione no existe',
+            })
+        }
+        if (idLocal === idVisita) {
+            return res.status(400).json({
+            error: 'Una selección no puede jugar contra sí misma',
+            })
+        }
+        const nuevaSemifinal = {numero: numeroSemifinal,
+            local: {
+            seleccionId: idLocal,
+            goles: local.goles
+            },
+            visita: {
+            seleccionId: idVisita,
+            goles: visita.goles
+            },
+        }
+        const existente = partidos.semifinales.findIndex(
+            (semifinal) => semifinal.numero === numeroSemifinal,
+        )
+        if (existente >= 0) {
+            partidos.semifinales[indiceExistente] = nuevaSemifinal
+            return res.status(200).json(nuevaSemifinal)
+        }
+        partidos.semifinales.push(nuevaSemifinal)
+        res.status(201).json(nuevaSemifinal)
     })
 // TODO: levanta el servidor.
     app.listen(PORT, () => {

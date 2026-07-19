@@ -35,10 +35,6 @@
 // Este es el mapa de lo que tienes que construir. El detalle completo de cada
 // una (qué recibe, qué devuelve, qué status) está en el enunciado: léelo.
 //
-//   ── Base ──────────────────────────────────────────────────────────────────
-//   GET  /api/selecciones                     todas
-//   GET  /api/selecciones/:id                 una, o 404
-//
 //   ── Con lógica ⭐ ──────────────────────────────────────────────────────────
 //   GET  /api/selecciones?continente=Europa   filtra por continente  (anidada)
 //   GET  /api/selecciones?campeon=true        solo las que ganaron alguna copa
@@ -62,11 +58,39 @@
     })
     })
 // Ejemplo para que veas el formato. Bórralo o quédatelo, como prefieras:
-//
     app.get('/api/selecciones', (req, res) => {
-    res.json(selecciones)
+        const { continente, campeon } = req.query
+        let resultado = selecciones
+        if (continente) {
+            const continenteEncontrado = continentes.find(
+            (item) =>
+                normalizarTexto(item.nombre) ===
+                normalizarTexto(continente),
+            )
+            if (!continenteEncontrado) {
+            return res.status(404).json({
+                error: `No existe el continente ${continente}`,
+            })
+            }
+            resultado = resultado.filter(
+            (seleccion) =>
+                seleccion.continenteId === continenteEncontrado.id,
+            )
+        }
+        if (campeon !== undefined) {
+            if (campeon !== 'true' && campeon !== 'false') {
+                return res.status(400).json({
+                error: 'El parámetro campeon debe ser true o false',
+                })
+            }
+            const esCampeon = campeon === 'true'
+            resultado = resultado.filter(
+                (seleccion) =>
+                (seleccion.copas.length > 0) === esCampeon,
+            )
+        }
+    res.status(200).json(resultado)
     })
-//
 // A partir de aquí, es tuyo. 🚀
     app.get('/api/selecciones/:id', (req, res) => {
         const id = Number(req.params.id)
@@ -86,7 +110,6 @@
         res.status(200).json(seleccionEncontrada)
     })
 // TODO: levanta el servidor.
-//
     app.listen(PORT, () => {
     console.log(`⚽ API del Mundial escuchando en http://localhost:${PORT}`)
     })

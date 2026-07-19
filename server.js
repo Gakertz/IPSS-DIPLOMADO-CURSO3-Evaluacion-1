@@ -231,6 +231,32 @@
         })
         res.status(200).json(listaSemifinales)
     })
+    app.post('/api/worldcup/2026/final', (req, res) => {
+        const { local, visita } = req.body
+        const idLocal = Number(local.seleccionId)
+        const idVisita = Number(visita.seleccionId)
+        const seleccionLocal = selecciones.find(
+            (seleccion) => seleccion.id === idLocal)
+        const seleccionVisita = selecciones.find(
+            (seleccion) => seleccion.id === idVisita)
+        if (!seleccionLocal || !seleccionVisita) {
+            return res.status(404).json({
+            error: 'Alguna de las selecciones no existe'
+            })
+        }
+        const nuevaFinal = {
+            local: {
+            seleccionId: idLocal,
+            goles: local.goles
+            },
+            visita: {
+            seleccionId: idVisita,
+            goles: visita.goles
+            },
+        }
+        partidos.final = nuevaFinal
+        res.status(201).json(nuevaFinal)
+    })
 // TODO: levanta el servidor.
     app.listen(PORT, () => {
     console.log(`⚽ API del Mundial escuchando en http://localhost:${PORT}`)

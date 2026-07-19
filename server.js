@@ -233,6 +233,17 @@
     })
     app.post('/api/worldcup/2026/final', (req, res) => {
         const { local, visita } = req.body
+        if (
+            !local || !visita ||
+            local.seleccionId === undefined ||
+            visita.seleccionId === undefined ||
+            local.goles === undefined ||
+            visita.goles === undefined
+        )
+        {   return res.status(400).json({
+            error: 'Faltan datos para registrar la final'
+            })
+        }
         const idLocal = Number(local.seleccionId)
         const idVisita = Number(visita.seleccionId)
         const seleccionLocal = selecciones.find(
@@ -242,6 +253,16 @@
         if (!seleccionLocal || !seleccionVisita) {
             return res.status(404).json({
             error: 'Alguna de las selecciones no existe'
+            })
+        }
+        if (
+            !Number.isInteger(local.goles) || 
+            !Number.isInteger(visita.goles) ||
+            local.goles < 0 || 
+            visita.goles < 0
+        )
+        {   return res.status(400).json({
+            error: 'Los goles deben ser números enteros iguales o mayores que cero'
             })
         }
         const nuevaFinal = {

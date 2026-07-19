@@ -23,6 +23,12 @@
     const PORT = 3000
     app.use(cors())
     app.use(express.json())
+    function normalizarTexto(texto) {
+        return texto
+            .toString()
+            .toLowerCase()
+            .trim()
+        }
 // ─────────────────────────────────────────────────────────────────────────────
 // TUS RUTAS
 //
@@ -63,21 +69,21 @@
 //
 // A partir de aquí, es tuyo. 🚀
     app.get('/api/selecciones/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const seleccionEncontrada = selecciones.find(
-        (seleccion) => seleccion.id === id,
-    )
-    if (!Number.isInteger(id) || id <= 0) {
-        return res.status(400).json({
-        error: 'El id debe ser un número entero positivo',
-        })
-    }
-    if (!seleccionEncontrada) {
-        return res.status(404).json({
-        error: `No existe una selección con el id ${id}`,
-        })
-    }
-    res.status(200).json(seleccionEncontrada)
+        const id = Number(req.params.id)
+        if (!Number.isInteger(id) || id <= 0) {
+            return res.status(400).json({
+            error: 'El id debe ser un número entero positivo',
+            })
+        }
+        const seleccionEncontrada = selecciones.find(
+            (seleccion) => seleccion.id === id,
+        )
+        if (!seleccionEncontrada) {
+            return res.status(404).json({
+            error: `No existe una selección con el id ${id}`,
+            })
+        }
+        res.status(200).json(seleccionEncontrada)
     })
 // TODO: levanta el servidor.
 //

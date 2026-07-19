@@ -128,9 +128,30 @@
     })
     app.post('/api/worldcup/2026/semifinals/:n', (req, res) => {
         const numeroSemifinal = Number(req.params.n)
+        if (
+            !Number.isInteger(numeroSemifinal) ||
+            numeroSemifinal < 1 || numeroSemifinal > 4
+        )
+        {  return res.status(400).json({
+            error: 'El número de semifinal debe estar entre 1 y 4',
+            })
+        }
         const { local, visita } = req.body
+        if (!local || !visita) {
+            return res.status(400).json({
+            error: 'Debe ingresar las selecciones según local y visita',
+            })
+        }
         const idLocal = Number(local.seleccionId)
         const idVisita = Number(visita.seleccionId)
+        if (
+            !Number.isInteger(idLocal) ||
+            !Number.isInteger(idVisita)
+        )
+        {   return res.status(400).json({
+            error: 'Los identificadores de las selecciones deben ser números',
+            })
+        }
         const seleccionLocal = selecciones.find(
             (seleccion) => seleccion.id === idLocal,
         )
@@ -147,6 +168,15 @@
             error: 'Una selección no puede jugar contra sí misma',
             })
         }
+        if (
+            !Number.isInteger(local.goles) ||
+            !Number.isInteger(visita.goles) ||
+            local.goles < 0 || visita.goles < 0
+        )
+        {   return res.status(400).json({
+            error: 'La cantidad de goles debe ser números iguales o mayores que cero',
+            })
+        }
         const nuevaSemifinal = {numero: numeroSemifinal,
             local: {
             seleccionId: idLocal,
@@ -161,7 +191,7 @@
             (semifinal) => semifinal.numero === numeroSemifinal,
         )
         if (existente >= 0) {
-            partidos.semifinales[indiceExistente] = nuevaSemifinal
+            partidos.semifinales[existente] = nuevaSemifinal
             return res.status(200).json(nuevaSemifinal)
         }
         partidos.semifinales.push(nuevaSemifinal)

@@ -113,8 +113,22 @@
         const todasLasCopas = selecciones.flatMap(
             (seleccion) => seleccion.copas,
         )
-
         res.status(200).json(todasLasCopas)
+    })
+    app.get('/api/copas/:seleccion', (req, res) => {
+        const nombreBuscado = normalizarTexto(
+            req.params.seleccion,
+        )
+        const seleccionEncontrada = selecciones.find(
+            (seleccion) =>
+            normalizarTexto(seleccion.nombre) === nombreBuscado,
+        )
+        if (!seleccionEncontrada) {
+            return res.status(404).json({
+            error: `No existe la selección ${req.params.seleccion}`,
+            })
+        }
+        res.status(200).json(seleccionEncontrada.copas)
     })
 // TODO: levanta el servidor.
     app.listen(PORT, () => {

@@ -49,7 +49,12 @@
 //
 // Ojo: /semifinals/:n es UNA ruta, no cuatro.
 // ─────────────────────────────────────────────────────────────────────────────
-
+    app.get('/', (req, res) => {
+    res.status(200).json({
+        nombre: 'API Mundial 2026',
+        estado: 'activa',
+    })
+    })
 // Ejemplo para que veas el formato. Bórralo o quédatelo, como prefieras:
 //
     app.get('/api/selecciones', (req, res) => {
@@ -57,7 +62,18 @@
     })
 //
 // A partir de aquí, es tuyo. 🚀
-
+    app.get('/api/selecciones/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const seleccionEncontrada = selecciones.find(
+        (seleccion) => seleccion.id === id,
+    )
+    if (!seleccionEncontrada) {
+        return res.status(404).json({
+        error: `No existe una selección con el id ${id}`,
+        })
+    }
+    res.status(200).json(seleccionEncontrada)
+    })
 // TODO: levanta el servidor.
 //
     app.listen(PORT, () => {

@@ -39,9 +39,7 @@
 //   GET  /api/estadisticas                    resumen del torneo         (vale 2%)
 //
 //   ── Semifinales y final ⭐ ─────────────────────────────────────────────────
-//   POST /api/worldcup/2026/semifinals/:n     registra la semifinal n (1 a 4)
 //   GET  /api/worldcup/2026/semifinals/:n     el resultado de la semifinal n
-//   GET  /api/worldcup/2026/semifinals        las cuatro
 //   POST /api/worldcup/2026/final             registra la final
 //   GET  /api/worldcup/2026/final             la final, con su ganador
 //
@@ -196,6 +194,14 @@
         }
         partidos.semifinales.push(nuevaSemifinal)
         res.status(201).json(nuevaSemifinal)
+    })
+    app.get('/api/worldcup/2026/semifinals', (req, res) => {
+        const listaSemifinales = [1, 2, 3, 4].map((numero) => {
+            const semifinalEncontrada = partidos.semifinales.find(
+            (semifinal) => semifinal.numero === numero)
+            return semifinalEncontrada || null
+        })
+        res.status(200).json(listaSemifinales)
     })
 // TODO: levanta el servidor.
     app.listen(PORT, () => {

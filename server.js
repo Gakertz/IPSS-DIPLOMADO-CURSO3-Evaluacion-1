@@ -67,6 +67,11 @@
     const seleccionEncontrada = selecciones.find(
         (seleccion) => seleccion.id === id,
     )
+    if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).json({
+        error: 'El id debe ser un número entero positivo',
+        })
+    }
     if (!seleccionEncontrada) {
         return res.status(404).json({
         error: `No existe una selección con el id ${id}`,

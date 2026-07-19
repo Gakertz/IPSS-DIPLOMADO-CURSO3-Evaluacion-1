@@ -109,6 +109,13 @@
         }
         res.status(200).json(seleccionEncontrada)
     })
+    app.get('/api/copas', (req, res) => {
+        const todasLasCopas = selecciones.flatMap(
+            (seleccion) => seleccion.copas,
+        )
+
+        res.status(200).json(todasLasCopas)
+    })
 // TODO: levanta el servidor.
     app.listen(PORT, () => {
     console.log(`⚽ API del Mundial escuchando en http://localhost:${PORT}`)

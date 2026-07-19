@@ -195,6 +195,34 @@
         partidos.semifinales.push(nuevaSemifinal)
         res.status(201).json(nuevaSemifinal)
     })
+    app.get('/api/worldcup/2026/semifinals/:n', (req, res) => {
+        const numeroSemifinal = Number(req.params.n)
+        if (!Number.isInteger(numeroSemifinal) || numeroSemifinal < 1 || numeroSemifinal > 4) 
+        {   return res.status(400).json({
+            error: 'El número de semifinal debe estar entre 1 y 4',
+            })
+        }
+        const semifinalEncontrada = partidos.semifinales.find
+        ((semifinal) => semifinal.numero === numeroSemifinal)
+        if (!semifinalEncontrada) {
+            return res.status(404).json({error: 'esta semifinal aún no ha sido registrada'})
+        }
+        const seleccionLocal = selecciones.find(
+            (seleccion) => seleccion.id === semifinalEncontrada.local.seleccionId
+        )
+        const seleccionVisita = selecciones.find(
+            (seleccion) => seleccion.id === semifinalEncontrada.visita.seleccionId
+        )
+        res.status(200).json({
+            numero: numeroSemifinal,
+            local: 
+            {seleccion: seleccionLocal.nombre,
+            goles: semifinalEncontrada.local.goles}
+            ,visita: 
+            {seleccion: seleccionVisita.nombre,
+            goles: semifinalEncontrada.visita.goles},
+        })
+    })
     app.get('/api/worldcup/2026/semifinals', (req, res) => {
         const listaSemifinales = [1, 2, 3, 4].map((numero) => {
             const semifinalEncontrada = partidos.semifinales.find(

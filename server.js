@@ -330,10 +330,16 @@
                 return contador
             }, {}
         )
+        const sumaRanking = selecciones.reduce(
+            (contador, seleccion) =>
+            contador + seleccion.fifaRanking, 0
+        )
+        const promedioRanking = sumaRanking / selecciones.length
         res.status(200).json({
             totalSelecciones: selecciones.length,
             totalCopas: totalCopas,
-            seleccionesPorContinente: seleccionesPorContinente
+            seleccionesPorContinente: seleccionesPorContinente,
+            promedioRanking: Number(promedioRanking.toFixed(2))
         })
     })
 // TODO: levanta el servidor.

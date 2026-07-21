@@ -291,13 +291,18 @@
         }
         const idLocal = Number(local.seleccionId)
         const idVisita = Number(visita.seleccionId)
+        if (!Number.isInteger(idLocal) ||!Number.isInteger(idVisita))
+        {   return res.status(400).json({
+            error: 'Los identificadores de las selecciones deben ser números enteros'
+            })
+        }
         const Local = selecciones.find(
             (seleccion) => seleccion.id === idLocal)
         const Visita = selecciones.find(
             (seleccion) => seleccion.id === idVisita)
         if (!Local || !Visita) {
             return res.status(404).json({
-            error: 'Alguna de las selecciones no existe'
+            error: 'Algun id de las selecciones no existe'
             })
         }
         if (

@@ -278,6 +278,40 @@
         partidos.final = nuevaFinal
         res.status(201).json(nuevaFinal)
     })
+    app.get('/api/worldcup/2026/final', (req, res) => {
+        if (!partidos.final) {
+            return res.status(404).json({
+            error: 'La final aún no ha sido registrada',
+            })
+        }
+        const Local = selecciones.find(
+            (seleccion) =>
+            seleccion.id === partidos.final.local.seleccionId,
+        )
+        const Visita = selecciones.find(
+            (seleccion) =>
+            seleccion.id === partidos.final.visita.seleccionId,
+        )
+        let ganador
+        if (partidos.final.local.goles > partidos.final.visita.goles) 
+        {   ganador = Local.nombre
+        }
+        else if (partidos.final.visita.goles > partidos.final.local.goles) 
+        {   ganador = Visita.nombre
+        }
+        else {ganador = 'Empate'}
+        res.status(200).json({
+            local: {
+            seleccion: Local.nombre,
+            goles: partidos.final.local.goles
+            },
+            visita: {
+            seleccion: Visita.nombre,
+            goles: partidos.final.visita.goles
+            },
+            ganador: ganador
+        })
+    })
 // TODO: levanta el servidor.
     app.listen(PORT, () => {
     console.log(`⚽ API del Mundial escuchando en http://localhost:${PORT}`)

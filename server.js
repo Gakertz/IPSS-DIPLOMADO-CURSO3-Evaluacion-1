@@ -158,7 +158,7 @@
         )
         if (!Local || !Visita) {
             return res.status(404).json({
-            error: 'Alguna de las seleccione no existe',
+            error: 'Alguna de las selecciones no existe',
             })
         }
         if (idLocal === idVisita) {
@@ -205,7 +205,7 @@
         const semifinalEncontrada = partidos.semifinales.find
         ((semifinal) => semifinal.numero === numeroSemifinal)
         if (!semifinalEncontrada) {
-            return res.status(404).json({error: 'esta semifinal aún no ha sido registrada'})
+            return res.status(404).json({error: 'Esta semifinal aún no ha sido registrada'})
         }
         const Local = selecciones.find(
             (seleccion) => seleccion.id === semifinalEncontrada.local.seleccionId

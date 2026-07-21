@@ -342,6 +342,11 @@
             promedioRanking: Number(promedioRanking.toFixed(2))
         })
     })
+    app.use((req, res) => {
+        res.status(404).json({
+            error: 'Ruta no encontrada',
+        })
+    })
 // TODO: levanta el servidor.
     app.listen(PORT, () => {
     console.log(`⚽ API del Mundial escuchando en http://localhost:${PORT}`)

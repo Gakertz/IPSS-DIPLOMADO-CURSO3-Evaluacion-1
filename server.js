@@ -312,6 +312,17 @@
             ganador: ganador
         })
     })
+    app.get('/api/estadisticas', (req, res) => {
+        const totalCopas = selecciones.reduce(
+            (contador, seleccion) =>
+            contador + seleccion.copas.length,
+            0
+        )
+        res.status(200).json({
+            totalSelecciones: selecciones.length,
+            totalCopas: totalCopas
+        })
+    })
 // TODO: levanta el servidor.
     app.listen(PORT, () => {
     console.log(`⚽ API del Mundial escuchando en http://localhost:${PORT}`)

@@ -150,13 +150,13 @@
             error: 'Los identificadores de las selecciones deben ser números',
             })
         }
-        const seleccionLocal = selecciones.find(
+        const Local = selecciones.find(
             (seleccion) => seleccion.id === idLocal,
         )
-        const seleccionVisita = selecciones.find(
+        const Visita = selecciones.find(
             (seleccion) => seleccion.id === idVisita,
         )
-        if (!seleccionLocal || !seleccionVisita) {
+        if (!Local || !Visita) {
             return res.status(404).json({
             error: 'Alguna de las seleccione no existe',
             })
@@ -207,27 +207,72 @@
         if (!semifinalEncontrada) {
             return res.status(404).json({error: 'esta semifinal aún no ha sido registrada'})
         }
-        const seleccionLocal = selecciones.find(
+        const Local = selecciones.find(
             (seleccion) => seleccion.id === semifinalEncontrada.local.seleccionId
         )
-        const seleccionVisita = selecciones.find(
+        const Visita = selecciones.find(
             (seleccion) => seleccion.id === semifinalEncontrada.visita.seleccionId
         )
+        let ganador
+        if (semifinalEncontrada.local.goles > semifinalEncontrada.visita.goles)
+        {   ganador = Local.nombre
+        }
+        else if (semifinalEncontrada.visita.goles > semifinalEncontrada.local.goles)
+        {   ganador = Visita.nombre
+        }
+        else {
+            ganador = 'Empate'
+        }
         res.status(200).json({
             numero: numeroSemifinal,
             local: 
-            {seleccion: seleccionLocal.nombre,
+            {seleccion: Local.nombre,
             goles: semifinalEncontrada.local.goles}
             ,visita: 
-            {seleccion: seleccionVisita.nombre,
+            {seleccion: Visita.nombre,
             goles: semifinalEncontrada.visita.goles},
+            ganador: ganador
         })
     })
     app.get('/api/worldcup/2026/semifinals', (req, res) => {
         const listaSemifinales = [1, 2, 3, 4].map((numero) => {
             const semifinalEncontrada = partidos.semifinales.find(
-            (semifinal) => semifinal.numero === numero)
-            return semifinalEncontrada || null
+                (semifinal) =>
+                semifinal.numero === numero
+            )
+            if (!semifinalEncontrada) {
+                return null
+            }
+            const Local = selecciones.find(
+                (seleccion) =>
+                seleccion.id === semifinalEncontrada.local.seleccionId
+            )
+            const Visita = selecciones.find(
+                (seleccion) =>
+                seleccion.id === semifinalEncontrada.visita.seleccionId
+            )
+            let ganador
+            if (semifinalEncontrada.local.goles > semifinalEncontrada.visita.goles)
+            {   ganador = Local.nombre
+            }
+            else if (semifinalEncontrada.visita.goles > semifinalEncontrada.local.goles)
+            {   ganador = Visita.nombre
+            }
+            else {
+                ganador = 'Empate'
+            }
+            return {
+                numero: `semifinal ${numero}`,
+                local: {
+                seleccion: Local.nombre,
+                goles: semifinalEncontrada.local.goles
+                },
+                visita: {
+                seleccion: Visita.nombre,
+                goles: semifinalEncontrada.visita.goles
+                },
+                ganador: ganador
+            }
         })
         res.status(200).json(listaSemifinales)
     })
@@ -246,11 +291,11 @@
         }
         const idLocal = Number(local.seleccionId)
         const idVisita = Number(visita.seleccionId)
-        const seleccionLocal = selecciones.find(
+        const Local = selecciones.find(
             (seleccion) => seleccion.id === idLocal)
-        const seleccionVisita = selecciones.find(
+        const Visita = selecciones.find(
             (seleccion) => seleccion.id === idVisita)
-        if (!seleccionLocal || !seleccionVisita) {
+        if (!Local || !Visita) {
             return res.status(404).json({
             error: 'Alguna de las selecciones no existe'
             })

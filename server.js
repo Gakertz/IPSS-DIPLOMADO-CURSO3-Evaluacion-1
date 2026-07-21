@@ -318,9 +318,22 @@
             contador + seleccion.copas.length,
             0
         )
+        const seleccionesPorContinente = selecciones.reduce(
+            (contador, seleccion) => {
+                const continenteEncontrado = continentes.find(
+                    (continente) =>
+                    continente.id === seleccion.continenteId
+                )
+                const nombreContinente = continenteEncontrado.nombre
+                contador[nombreContinente] =
+                    (contador[nombreContinente] || 0) + 1
+                return contador
+            }, {}
+        )
         res.status(200).json({
             totalSelecciones: selecciones.length,
-            totalCopas: totalCopas
+            totalCopas: totalCopas,
+            seleccionesPorContinente: seleccionesPorContinente
         })
     })
 // TODO: levanta el servidor.
